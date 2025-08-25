@@ -1,0 +1,4 @@
+.prod.env
+data
+!.keep
+.env

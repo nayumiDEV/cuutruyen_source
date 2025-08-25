@@ -1,0 +1,251 @@
+version: '3.5'
+
+services:
+  api:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen
+    volumes:
+      - api-uploads:/api/public/uploads
+    environment:
+      - RAILS_MIN_THREADS=5
+      - RAILS_MAX_THREADS=7
+      - PG_DATABASE=${PG_DATABASE}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - BASE_URL=${APP_BASE_URL}
+      - EDITOR=vi
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+      resources:
+        limits:
+          memory: 1200M
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_api"
+    networks:
+      - cuutruyen-network
+
+  queue:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen
+    command: ["sh", "./docker/start-queue.sh"]
+    working_dir: /api
+    volumes:
+      - api-uploads:/api/public/uploads
+    environment:
+      - PG_DATABASE=${PG_DATABASE}
+      - PG_USER=${PG_USER}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - BASE_URL=${APP_BASE_URL}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_queue"
+    networks:
+      - cuutruyen-network
+
+  meilisearch:
+    image: getmeili/meilisearch:v0.29
+    command: meilisearch --log-level 'WARN'
+    volumes:
+      - meilisearch-data-2:/meili_data
+    environment:
+      - MEILI_MAX_INDEXING_MEMORY=125Mb
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+      resources:
+        limits:
+          memory: 1500M
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_meilisearch"
+    networks:
+      - cuutruyen-network
+
+  app:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen_app
+    volumes:
+      - app-caddy-data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_app"
+    networks:
+      - cuutruyen-network
+
+  spy:
+    image: registry.gitlab.com/cuutruyen_project/cuuspy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    volumes:
+      - cuuspy-data:/data
+    environment:
+      - DATABASE_PATH=/data/db.sqlite3
+    logging:
+      driver: syslog
+      options:
+        tag: "cuuspy"
+    networks:
+      - cuutruyen-network
+
+  postgres:
+    image: postgres:14.1-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${PG_DATABASE}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_postgres"
+    networks:
+      - cuutruyen-network
+
+  redis:
+    image: redis:6-alpine
+    command: redis-server --maxmemory 400mb --maxmemory-policy allkeys-lru --save "" --appendonly no
+    volumes:
+      - redis-data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_redis"
+    networks:
+      - cuutruyen-network
+
+  redisalt:
+    image: redis:6-alpine
+    command: redis-server --appendonly yes --save "120 10000"
+    volumes:
+      - redisalt-data:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_redisalt"
+    networks:
+      - cuutruyen-network
+
+  caddy:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen_caddy:latest
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+      - api-uploads:/services/cuutruyen/public/uploads
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 3
+        window: 120s
+      placement:
+        constraints: [node.hostname == thang-alexhost]
+    logging:
+      driver: syslog
+      options:
+        tag: "cuutruyen_caddy"
+    ports:
+      - mode: host
+        protocol: tcp
+        published: 80
+        target: 80
+      - mode: host
+        protocol: tcp
+        published: 443
+        target: 443
+    networks:
+      - cuutruyen-network
+
+volumes:
+  app-caddy-data:
+  api-uploads:
+  caddy-data:
+  caddy-config:
+  proxy-data:
+  proxy-config:
+  db-config:
+  postgres-data:
+  redis-data:
+  redisalt-data:
+  sphinx-data:
+  meilisearch-data-2:
+  cuuspy-data:
+
+networks:
+  cuutruyen-network:

@@ -1,0 +1,51 @@
+# Main sites
+cuutruyen.net, hetcuutruyen.net, nettrom.com, cuutruyenpip7z.site, cuutruyen5c844.site {
+    tls thang.dovah@gmail.com {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        resolvers 1.1.1.1
+    }
+
+    @app_matcher {
+        path *
+        header Cf-Ipcountry VN
+    }
+
+    handle /cable* {
+        encode zstd gzip
+        reverse_proxy api:3000
+    }
+
+    handle /api* {
+        encode zstd gzip
+        reverse_proxy api:3000
+    }
+
+    handle /spy* {
+        rewrite /spy/histories /api/histories
+        reverse_proxy spy:3001
+    }
+
+    handle /abitrary_photos/* {
+        reverse_proxy api:3000
+    }
+
+    handle /uploads* {
+        header Cache-Control max-age=31536000
+        root * /services/cuutruyen/public
+        file_server
+    }
+
+    handle * {
+        encode zstd gzip
+        reverse_proxy app:3000
+    }
+}
+
+# Redirect www variants to non-www
+www.cuutruyen.net, www.hetcuutruyen.net, www.nettrom.com, www.cuutruyenpip7z.site, www.cuutruyen5c844.site {
+    tls thang.dovah@gmail.com {
+        dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        resolvers 1.1.1.1
+    }
+    redir https://{labels.1}.{labels.0}{uri} permanent
+}

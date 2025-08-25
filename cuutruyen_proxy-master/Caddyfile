@@ -1,0 +1,7 @@
+cuutruyen.net, kakarot.cuutruyen.net {
+    reverse_proxy caddy:3000
+}
+
+www.cuutruyen.net {
+    redir https://cuutruyen.net{uri} permanent
+}

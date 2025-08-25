@@ -1,0 +1,37 @@
+stages:
+  - build
+
+build:
+  image: docker:25
+  services:
+    - docker:25-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+  stage: build
+  only:
+    - master
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:build-stage || true
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --target build-stage
+      --cache-from $CI_REGISTRY_IMAGE:build-stage
+      --tag $CI_REGISTRY_IMAGE:build-stage
+      --file Dockerfile.prod
+      .
+    - >
+      docker build
+      --target serve-stage
+      --cache-from $CI_REGISTRY_IMAGE:build-stage
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      --tag $CI_REGISTRY_IMAGE:latest
+      --file Dockerfile.prod
+      .
+    - docker push $CI_REGISTRY_IMAGE:build-stage
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest

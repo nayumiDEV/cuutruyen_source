@@ -1,0 +1,3 @@
+class ContentProcessor
+
+end

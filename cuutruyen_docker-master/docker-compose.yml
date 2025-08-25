@@ -1,0 +1,107 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ../cuutruyen
+      dockerfile: dev.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    container_name: cuutruyen_api
+    restart: on-failure:5
+    ports:
+      - 127.0.0.1:3000:3000
+    working_dir: /api
+    volumes:
+      - ../cuutruyen:/api
+      - ./data/api/bundle:/usr/local/bundle
+    environment:
+      - PG_DATABASE=${DB_DATABASE}
+      - PG_USER=${DB_USER}
+      - PG_PASSWORD=${DB_PASSWORD}
+      - BASE_URL=${APP_BASE_URL}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EDITOR=vi
+    tty: true
+    stdin_open: true
+  queue:
+    build:
+      context: ../cuutruyen
+      dockerfile: dev.Dockerfile
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    command: ["sh", "./start-queue.sh"]
+    container_name: cuutruyen_queue
+    restart: on-failure:5
+    working_dir: /api
+    volumes:
+      - ../cuutruyen:/api
+      - ./data/api/bundle:/usr/local/bundle
+    environment:
+      - PG_DATABASE=${DB_DATABASE}
+      - PG_USER=${DB_USER}
+      - PG_PASSWORD=${DB_PASSWORD}
+      - BASE_URL=${APP_BASE_URL}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    tty: true
+  app:
+    build:
+      context: ../cuutruyen_app
+      dockerfile: Dockerfile.dev
+      args:
+        UID: ${UID}
+        GID: ${GID}
+    container_name: cuutruyen_app
+    restart: on-failure:5
+    working_dir: /app
+    ports:
+      - 8080:8080
+      - 4000:4000
+    volumes:
+      - ../cuutruyen_app:/app
+    tty: true
+  postgres:
+    image: postgres:14.1-alpine
+    restart: on-failure:5
+    ports:
+      - 127.0.0.1:5432:5432
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_DATABASE}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+  redis:
+    image: redis:6-alpine
+    command: redis-server --appendonly yes
+    restart: on-failure:5
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - ./data/redis:/data
+  caddy:
+    image: caddy:2-alpine
+    ports:
+      - 80:80
+      - 443:443
+    restart: on-failure:5
+    volumes:
+      - ./data/caddy/data:/data
+      - ./data/caddy/config:/config
+      - ./Caddyfile.dev:/etc/caddy/Caddyfile
+      - ../cuutruyen:/services/cuutruyen
+      - ../cuutruyen_app:/services/cuutruyen_app
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    restart: on-failure:5
+    ports:
+      - 127.0.0.1:7700:7700
+    volumes:
+      - ./data/meilisearch:/data.ms

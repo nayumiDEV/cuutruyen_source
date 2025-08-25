@@ -1,0 +1,27 @@
+{
+  "name": "truycapcuutruyen",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
+  },
+  "dependencies": {
+    "@tailwindcss/typography": "^0.5.10",
+    "ky": "^1.0.1",
+    "mdue": "^0.1.4",
+    "vue": "^3.3.4",
+    "vue-collapsed": "^1.2.7"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.2.3",
+    "autoprefixer": "^10.4.15",
+    "eslint": "^8.45.0",
+    "eslint-plugin-vue": "^9.15.1",
+    "postcss": "^8.4.29",
+    "tailwindcss": "^3.3.3",
+    "vite": "^4.4.6"
+  }
+}

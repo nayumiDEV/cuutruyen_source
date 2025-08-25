@@ -1,0 +1,26 @@
+development:
+  database: cuutruyen_development
+  username: <%= ENV['PG_USER'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+  host: <%= ENV.fetch('PG_HOST') { 'postgres' } %>
+  pool: 5
+  encoding: unicode
+  adapter: postgresql
+
+test:
+  database: cuutruyen_test
+  username: <%= ENV['PG_USER'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+  host: <%= ENV.fetch('PG_HOST') { 'postgres' } %>
+  pool: 5
+  encoding: unicode
+  adapter: postgresql
+
+production:
+  database: cuutruyen_production
+  username: <%= ENV['PG_USER'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+  host: <%= ENV.fetch('PG_HOST') { 'postgres' } %>
+  pool: 9
+  encoding: unicode
+  adapter: postgresql

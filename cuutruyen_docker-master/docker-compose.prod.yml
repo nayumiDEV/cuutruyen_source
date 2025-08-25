@@ -1,0 +1,90 @@
+version: '3'
+
+services:
+  api:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen
+    container_name: cuutruyen_api
+    restart: on-failure:5
+    volumes:
+      - api-uploads:/api/public/uploads
+    environment:
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - EDITOR=vi
+    tty: true
+
+  queue:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen
+    command: ["sh", "./docker/start-queue.sh"]
+    container_name: cuutruyen_queue
+    restart: on-failure:5
+    working_dir: /api
+    volumes:
+      - api-uploads:/api/public/uploads
+    environment:
+      - PG_DATABASE=${DB_DATABASE}
+      - PG_USER=${DB_USER}
+      - PG_PASSWORD=${DB_PASSWORD}
+      - BASE_URL=${APP_BASE_URL}
+      - SMTP_SERVER=${SMTP_SERVER}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+    tty: true
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    restart: on-failure:5
+    volumes:
+      - meilisearch-data:/data.ms
+
+  app:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen_app
+    container_name: cuutruyen_app
+    restart: on-failure:5
+    volumes:
+      - app-caddy-data:/data
+    tty: true
+
+  postgres:
+    image: postgres:14.1-alpine
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${PG_DATABASE}
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+
+  redis:
+    image: redis:6-alpine
+    command: redis-server --appendonly yes
+    restart: on-failure:5
+    ports:
+      - 127.0.0.1:6379:6379
+    volumes:
+      - redis-data:/data
+
+  caddy:
+    image: registry.gitlab.com/cuutruyen_project/cuutruyen_caddy:latest
+    restart: on-failure:5
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - caddy-data:/data
+      - caddy-config:/config
+      - api-uploads:/services/cuutruyen/public/uploads
+
+volumes:
+  app-caddy-data:
+  api-uploads:
+  caddy-data:
+  caddy-config:
+  postgres-data:
+  redis-data:
+  meilisearch-data:

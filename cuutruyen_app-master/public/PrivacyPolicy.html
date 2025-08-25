@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chính sách & Điều khoản</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Open+Sans:wght@400;600;700&display=swap");
+
+    :root {
+      --color-background-dark: #0D1117;
+      /* GitHub dark background */
+      --color-background-medium: #161B22;
+      /* GitHub dark surface */
+      --color-background-light: #21262D;
+      /* GitHub dark border, slightly lighter for surfaces */
+      --color-text-primary: #CDD9E5;
+      /* GitHub dark primary text */
+      --color-text-secondary: #8B949E;
+      /* GitHub dark secondary text */
+      --color-accent-blue: #3B82F6;
+      /* Tailwind Blue 500 */
+      --color-accent-blue-hover: #2563EB;
+      /* Tailwind Blue 600 */
+      --color-border: #30363D;
+      /* GitHub dark border */
+
+      --font-primary: 'Open Sans', sans-serif;
+      --font-secondary: 'Roboto', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body,
+    html {
+      width: 100%;
+      min-height: 100vh;
+      background-color: var(--color-background-dark);
+      color: var(--color-text-primary);
+      font-family: var(--font-primary);
+      line-height: 1.6;
+      font-size: 16px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--color-background-medium);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--color-text-secondary);
+      border-radius: 5px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--color-accent-blue);
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    /* Header */
+    .site-header {
+      background-color: var(--color-background-medium);
+      padding: 20px 0;
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .site-header h1 {
+      font-family: var(--font-secondary);
+      font-size: 2em;
+      color: var(--color-text-primary);
+      font-weight: 700;
+    }
+
+    /* Main Content Area */
+    .main-content {
+      padding: 30px 0;
+      flex-grow: 1;
+    }
+
+    /* Content Navigation */
+    .content-navigation {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .nav-button {
+      font-family: var(--font-secondary);
+      background-color: transparent;
+      color: var(--color-text-secondary);
+      border: none;
+      padding: 15px 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s ease, border-bottom 0.3s ease;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -1px;
+      /* Overlap with parent border */
+    }
+
+    .nav-button:hover {
+      color: var(--color-accent-blue);
+    }
+
+    .nav-button.active {
+      color: var(--color-accent-blue);
+      border-bottom-color: var(--color-accent-blue);
+    }
+
+    /* Content Sections */
+    .content-section {
+      display: none;
+      /* Hidden by default, JS will show active one */
+      background-color: var(--color-background-medium);
+      padding: 25px;
+      border-radius: 8px;
+      border: 1px solid var(--color-border);
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-secondary);
+      font-size: 1.8em;
+      color: var(--color-text-primary);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--color-border);
+      font-weight: 600;
+    }
+
+    .section-description {
+      font-size: 1em;
+      color: var(--color-text-secondary);
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+
+    .section-description span {
+      color: var(--color-text-primary);
+      font-weight: 500;
+    }
+
+    /* Accordion (Tabs) */
+    .tabs {
+      margin-top: 20px;
+    }
+
+    .tab {
+      margin-bottom: 15px;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      overflow: hidden;
+      /* To contain the border-radius for children */
+    }
+
+    .tab-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      font-weight: 600;
+      font-size: 1.1em;
+      cursor: pointer;
+      background-color: var(--color-background-light);
+      color: var(--color-text-primary);
+      transition: background-color 0.3s ease;
+      font-family: var(--font-secondary);
+    }
+
+    .tab-label:hover {
+      background-color: #2a2f37;
+      /* Slightly lighter on hover */
+    }
+
+    .tab-label::after {
+      content: '+';
+      font-size: 1.6em;
+      font-weight: 300;
+      /* Lighter weight for icon */
+      color: var(--color-text-secondary);
+      transition: transform 0.3s ease;
+      line-height: 1;
+    }
+
+    input[type="checkbox"] {
+      position: absolute;
+      opacity: 0;
+      z-index: -1;
+    }
+
+    input[type="checkbox"]:checked+.tab-label {
+      background-color: var(--color-accent-blue);
+      /* Active state color */
+      color: white;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    input[type="checkbox"]:checked+.tab-label:hover {
+      background-color: var(--color-accent-blue-hover);
+    }
+
+    input[type="checkbox"]:checked+.tab-label::after {
+      content: '−';
+      /* Minus sign for Unicode */
+      transform: rotate(180deg);
+      /* Rotate plus to form minus effectively, or just use minus */
+      color: white;
+    }
+
+    .paragraph {
+      background-color: var(--color-background-medium);
+      color: var(--color-text-secondary);
+      padding: 0 20px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+      font-size: 0.95em;
+      line-height: 1.7;
+      border-top: 1px solid var(--color-border);
+      /* Separator for open content */
+    }
+
+    input[type="checkbox"]:checked~.paragraph {
+      padding: 20px;
+      max-height: 1000px;
+      /* Adjust if content can be very long */
+    }
+
+    .paragraph ul {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      padding-left: 20px;
+    }
+
+    .paragraph li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: var(--color-accent-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: var(--color-accent-blue-hover);
+    }
+
+    /* Footer */
+    .site-footer {
+      background-color: var(--color-background-medium);
+      padding: 25px 0;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      color: var(--color-text-secondary);
+      font-size: 0.9em;
+      flex-shrink: 0;
+    }
+
+    .site-footer a {
+      color: var(--color-accent-blue);
+      font-weight: 500;
+    }
+
+    .site-footer a:hover {
+      color: var(--color-accent-blue-hover);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      body {
+        font-size: 15px;
+      }
+
+      .site-header h1 {
+        font-size: 1.7em;
+      }
+
+      .nav-button {
+        padding: 12px 15px;
+        font-size: 1em;
+      }
+
+      .section-title {
+        font-size: 1.5em;
+      }
+
+      .tab-label {
+        padding: 12px 15px;
+        font-size: 1em;
+      }
+
+      input[type="checkbox"]:checked~.paragraph {
+        padding: 15px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        width: 95%;
+      }
+
+      .site-header h1 {
+        font-size: 1.4em;
+      }
+
+      .content-navigation {
+        flex-direction: column;
+        /* Stack buttons on small screens */
+        border-bottom: none;
+      }
+
+      .nav-button {
+        border-bottom: 1px solid var(--color-border);
+        margin-bottom: 0;
+        border-radius: 0;
+      }
+
+      .nav-button.active {
+        border-bottom-color: var(--color-accent-blue);
+        /* Still highlight active */
+      }
+
+      .nav-button:last-child {
+        border-bottom: none;
+      }
+
+      .section-title {
+        font-size: 1.3em;
+      }
+
+      .tab-label {
+        font-size: 0.95em;
+      }
+
+      input[type="checkbox"]:checked+.tab-label::after {
+        transform: rotate(0deg);
+        /* Keep minus simple if rotating plus caused issues */
+      }
+    }
+  </style>
+  <!-- <link rel="stylesheet" href="PrivacyPolicy.css" /> -->
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Điều khoản Dịch vụ & Chính sách Bảo mật</h1>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <nav class="content-navigation">
+        <button type="button" class="nav-button active" data-target="terms-section">Điều khoản dịch vụ</button>
+        <button type="button" class="nav-button" data-target="privacy-section">Chính sách bảo mật</button>
+      </nav>
+
+      <div class="content-area">
+        <section id="terms-section" class="content-section active">
+          <h2 class="section-title">Điều khoản dịch vụ</h2>
+          <p class="section-description">Cảm ơn bạn đã sử dụng các sản phẩm và dịch vụ của Cứu Truyện. <br><br>
+            <span>Bằng việc sử dụng dịch vụ của chúng tôi, bạn đang đồng ý với các điều khoản bên dưới. Vui lòng đọc kỹ các điều khoản này.</span><br />
+          </p>
+          <div class="tabs">
+            <!-- Giới hạn độ tuổi -->
+            <div class="tab">
+              <input type="checkbox" id="chck_age_limit" />
+              <label class="tab-label" for="chck_age_limit">Giới hạn độ tuổi</label>
+              <div class="paragraph">
+                Bạn phải từ 13 tuổi trở lên để sử dụng dịch vụ của chúng tôi.
+              </div>
+            </div>
+
+            <!-- Tài khoản và hoạt động của bạn -->
+            <div class="tab">
+              <input type="checkbox" id="chck_account_activity" />
+              <label class="tab-label" for="chck_account_activity">Tài khoản và hoạt động của bạn</label>
+              <div class="paragraph">
+                Bạn có các quyền sau đây đối với tài khoản của mình:
+                <ul>
+                  <li>Thay đổi mật khẩu</li>
+                  <li>Xóa tài khoản</li>
+                  <li>Đăng nội dung mới (manga/manhwa/manhua)</li>
+                  <li>Truy cập và xem các nội dung (manga/manhwa/manhua) được đăng công khai trên cuutruyen.net</li>
+                  <li>Theo dõi các nội dung (manga/manhwa/manhua) được đăng công khai trên cuutruyen.net</li>
+                  <li>Bình luận trong các chương cụ thể trong các nội dung (manga/manhwa/manhua) được đăng công khai trên cuutruyen.net. Nhưng nội dung bình luận phải tuân theo các quy tắc riêng của chúng tôi.</li>
+                </ul>
+                <br />
+                Lưu ý:
+                <ul>
+                  <li>Đối Với việc đăng nội dung (manga/manhwa/manhua) thay đổi và xóa tài khoản. Hiện các bạn phải liên hệ fanpage của chúng tôi tại: https://www.facebook.com/CuuTruyenTranh để có thể thực hiện. Chúng tôi cũng không có trách nhiệm phải khôi phục mật khẩu hoặc xóa tài khoản của bạn ngay lập tức.</li>
+                  <li>Chúng tôi có toàn quyền sửa, xóa tài khoản hoặc bình luận hoặc nội dung (manga/manhwa/manhua) của bạn mà không cần báo trước nếu tên người dùng, bình luận hoặc nội dung của bạn vi phạm các nguyên tắc của chúng tôi.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Quên tên đăng nhập -->
+            <div class="tab">
+              <input type="checkbox" id="chck_forgot_username" />
+              <label class="tab-label" for="chck_forgot_username">Quên tên đăng nhập?</label>
+              <div class="paragraph">
+                <p>Nếu bạn quên tên đăng nhập, bạn có thể sử dụng chức năng "Quên mật khẩu". Tên đăng nhập của bạn sẽ được đính kèm trong email hướng dẫn khôi phục mật khẩu gửi về địa chỉ email đã đăng ký với tài khoản.</p>
+              </div>
+            </div>
+
+            <!-- Quy tắc ứng xử và Nội dung người dùng -->
+            <div class="tab">
+              <input type="checkbox" id="chck_user_conduct" />
+              <label class="tab-label" for="chck_user_conduct">Quy tắc ứng xử và Nội dung người dùng</label>
+              <div class="paragraph">
+                <ul>
+                  <li>Nghiêm cấm tuyệt đối các bình luận mang tính gây war, tiêu cực, xúc phạm, nhục mạ cá nhân hoặc tổ chức, chống phá nhà nước Cộng hoà Xã hội Chủ nghĩa Việt Nam.</li>
+                  <li>Cứu Truyện có toàn quyền chấm dứt hành vi vi phạm bằng cách xoá bình luận hoặc mute, ban tài khoản vi phạm mà không cần báo trước.</li>
+                </ul>
+              </div>
+            </div>
+            
+            <!-- Sự đồng ý của bạn -->
+            <div class="tab">
+              <input type="checkbox" id="chck_consent" />
+              <label class="tab-label" for="chck_consent">Sự đồng ý của bạn</label>
+              <div class="paragraph">
+                Khi sử dụng dịch vụ của Cứu Truyện, có nghĩa là bạn đã chấp nhận mọi điều khoản trong Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi. Chúng tôi hoạt động hoàn toàn trong khuôn khổ luật pháp và cam kết tuân thủ các pháp chế của Nhà nước Cộng hòa Xã hội Chủ nghĩa Việt Nam. Các điều khoản trên là phù hợp với luật pháp hiện hành và đảm bảo quyền lợi cao nhất cho người sử dụng dịch vụ của Cứu Truyện.
+              </div>
+            </div>
+
+            <!-- Quyền lợi của nhóm dịch -->
+            <div class="tab">
+              <input type="checkbox" id="chck_team_rights" />
+              <label class="tab-label" for="chck_team_rights">Quyền lợi của nhóm dịch</label>
+              <div class="paragraph">
+                <ul>
+                  <li>Các nhóm dịch được toàn quyền thêm/sửa/xóa đối với nội dung (manga/manhwa/manhua) do các bạn Việt hóa. Chúng tôi sẽ không can thiệp hay sửa đổi bất kì nội dung của các bạn nếu những nội dung đấy vi phạm chính sách của chúng tôi hoặc thuần phong mĩ tục của nước Cộng hòa Xã hội Chủ nghĩa Việt Nam.</li>
+                  <li>Các nhóm dịch không được phép quảng bá cho bất kì trang web truyện tranh bất hợp pháp nào khác ngoài Cứu Truyện. Nếu các bạn cố tình vi phạm, chúng tôi có thể khóa/xóa tài khoản của bạn mà không cần báo trước bất cứ lúc nào.</li>
+                </ul>
+                <br>
+                Các nhóm dịch trực thuộc Cứu Truyện có quyền đăng bài viết giới thiệu truyện của các bạn trong các nhóm trực thuộc Cứu Truyện bên dưới đây:
+                <ul>
+                  <li><a href="https://www.facebook.com/groups/cuutruyen2vn">Mặt tối của Cứu Truyện</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Dịch trùng truyện -->
+            <div class="tab">
+              <input type="checkbox" id="chck_translation_overlap" />
+              <label class="tab-label" for="chck_translation_overlap">Trùng truyện giữa các nhóm dịch</label>
+              <div class="paragraph">
+                <ul>
+                  <li>Nếu một truyện được đồng thời thực hiện bởi nhiều nhóm khác nhau. Thì các nhóm dịch chen, hoặc làm mà chưa xin phép nhóm cũ sẽ bị yêu cầu gỡ truyện nếu có nhóm khiếu nại. Yêu cầu này có thể từ nhóm dịch cũ bị dịch chen, hoặc một nhóm khác đã được phép nhóm dịch cũ cho phép làm tiếp. Cứu Truyện có quyền gỡ truyện của nhóm vi phạm sau khi báo trước với nhóm vi phạm.<br />Luật này chỉ áp dụng cho các truyện trên Cứu Truyện. Các nhóm dịch làm từ đầu hoặc đã xin phép đều có ngang quyền lợi với nhau, không thiên vị.</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- FULL HD -->
+            <div class="tab">
+              <input type="checkbox" id="chck_fullhd_definition" />
+              <label class="tab-label" for="chck_fullhd_definition">FULL HD là gì?</label>
+              <div class="paragraph">
+                <ul>
+                  <li>Thuật ngữ FULL HD ở Cứu Truyện không giống ở những nơi khác. Mà chỉ đơn giản là dùng để đánh dấu những truyện có kích thước tối thiểu 1300 x 2000 đơn vị pixel (Lưu ý: raw chưa trải qua quá trình tăng size từ raw gốc có kích thước bé hơn).</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Tuyên bố miễn trừ trách nhiệm -->
+            <div class="tab">
+              <input type="checkbox" id="chck_disclaimer" />
+              <label class="tab-label" for="chck_disclaimer">Tuyên bố miễn trừ trách nhiệm</label>
+              <div class="paragraph">
+                Các tác phẩm thuộc về chủ sở hữu hợp pháp của nó (các bạn có thể truy cập vào trang web của các chủ sở hữu này thông qua liên kết được các cá nhân/nhóm thêm vào lúc đăng nội dung). Chúng tôi không sở hữu bản quyền của bất kì nội dung (manga/manhwa/manhua) nào trên cuutruyen.net. Các bản dịch (Việt hóa) được thực hiện bởi và thuộc về những cá nhân cụ thể được nêu đến trong credit (thường là ảnh nằm ở đầu hoặc cuối mỗi chương truyện).<br /><br />
+                Nếu một cá nhân, tác giả hoặc nhà xuất bản không muốn sản phẩm mà mình đang sở hữu bản quyền xuất hiện trên cuutruyen.net. Hãy liên hệ với chúng tôi qua địa chỉ ad.cuutruyen.net@gmail.com. Chúng tôi sẽ gỡ/ẩn nội dung đấy trong từ 1-7 ngày. Chúng tôi sẽ cần bạn chứng minh rằng bạn đang là chủ sở hữu hợp pháp của sản phẩm bạn yêu cầu gỡ xuống.
+              </div>
+            </div>
+
+            <!-- Thay đổi điều khoản -->
+            <div class="tab">
+              <input type="checkbox" id="chck_terms_changes" />
+              <label class="tab-label" for="chck_terms_changes">Thay đổi điều khoản</label>
+              <div class="paragraph">
+                Chúng tôi có thể thay đổi các điều khoản của bản Chính Sách Bảo Mật này cho phù hợp với điều kiện thực tế vào bất cứ lúc nào. Chúng tôi sẽ thông báo về những thay đổi lớn bằng cách đặt thông báo trên trang web của chúng tôi và được đặt trong thiết lập người dùng của bạn.
+              </div>
+            </div>
+
+            <!-- Thông tin liên lạc -->
+            <div class="tab">
+              <input type="checkbox" id="chck_contact_info" />
+              <label class="tab-label" for="chck_contact_info">Thông tin liên lạc</label>
+              <div class="paragraph">
+                Nếu bạn muốn liên hệ với chúng tôi để hiểu thêm về Chính sách này hoặc muốn liên hệ với chúng tôi về bất kỳ vấn đề nào liên quan đến quyền cá nhân và Thông tin cá nhân của bạn, bạn có thể gửi email tới <a href="mailto:ad.cuutruyen@gmail.com">ad.cuutruyen@gmail.com</a>.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="privacy-section" class="content-section">
+          <h2 class="section-title">Chính sách bảo mật</h2>
+          <p class="section-description">
+            Cứu Truyện là bên kiểm soát dữ liệu cá nhân của bạn trên trang web cuutruyen.net.<br /><br />
+            Chúng tôi đã thông qua Chính Sách Bảo Mật này, xác định cách chúng tôi xử lý thông tin do cuutruyen.net thu thập, đồng thời cung cấp lý do tại sao chúng tôi phải thu thập một số dữ liệu cá nhân nhất định về bạn. Do đó, bạn phải đọc Chính Sách Bảo Mật này trước khi sử dụng trang web cuutruyen.net.<br /><br />
+            Chúng tôi cam kết đảm bảo tính bảo mật và an toàn của dữ liệu đó.<br /><br />
+            <span>Lưu ý: Chính Sách Bảo Mật này không áp dụng đối với những bên tham gia mà chúng tôi không kiểm soát hoặc những người không phải nhân viên, đối tác của chúng tôi hoặc không nằm trong quyền kiểm soát của chúng tôi.</span><br />
+          </p>
+          <div class="tabs">
+            <!-- Thu thập thông tin -->
+            <div class="tab">
+              <input type="checkbox" id="chck_info_collection" />
+              <label class="tab-label" for="chck_info_collection">Thu thập thông tin</label>
+              <div class="paragraph">
+                Quy trình đăng ký của chúng tôi yêu cầu một thông tin nhận dạng người dùng bao gồm tên đăng nhập (username) và mật khẩu (password). Chúng tôi cũng yêu cầu bạn cung cấp một địa chỉ email được dùng trong trường hợp xác minh người dùng, nhận thông báo qua email khi quên mật khẩu truy cập. Việc cung cấp những thông tin khác cho chúng tôi hay không tùy thuộc vào quyết định của bạn. Vui lòng lưu ý rằng username hoặc những thông tin bạn cung cấp có thể chứa tên thật hoặc những thông tin cá nhân của bạn. Vậy nên chúng có thể xuất hiện trên website cuutruyen.net.
+              </div>
+            </div>
+
+            <!-- Bảo mật thông tin -->
+            <div class="tab">
+              <input type="checkbox" id="chck_info_security" />
+              <label class="tab-label" for="chck_info_security">Bảo mật thông tin</label>
+              <div class="paragraph">
+                Chúng tôi bảo mật thông tin bạn cung cấp trên máy chủ trong một môi trường được kiểm soát, an toàn, được bảo vệ khỏi sự truy cập, sử dụng hoặc tiết lộ trái phép. Chúng tôi giữ các biện pháp bảo vệ hành chính, kỹ thuật và vật lý hợp lý để bảo vệ chống lại việc truy cập, sử dụng, sửa đổi trái phép và tiết lộ dữ liệu cá nhân trong sự kiểm soát và lưu giữ của chúng tôi. Tuy nhiên, không thể đảm bảo việc truyền dữ liệu qua Internet hoặc mạng không dây.
+              </div>
+            </div>
+
+            <!-- Liên kết đến các trang web khác -->
+            <div class="tab">
+              <input type="checkbox" id="chck_external_links" />
+              <label class="tab-label" for="chck_external_links">Liên kết đến các trang web khác</label>
+              <div class="paragraph">
+                Trang web của chúng tôi có thể chứa các liên kết đến các trang web khác không do chúng tôi sở hữu hoặc kiểm soát. Xin lưu ý rằng chúng tôi không chịu trách nhiệm về các trang web khác như vậy hoặc các thông lệ về quyền riêng tư của bên thứ ba. Chúng tôi khuyến khích bạn lưu ý khi bạn rời khỏi trang web của chúng tôi và đọc các điều khoản về quyền riêng tư của mỗi trang web có thể thu thập thông tin cá nhân.
+              </div>
+            </div>
+
+            <!-- Tiết lộ pháp lý -->
+            <div class="tab">
+              <input type="checkbox" id="chck_legal_disclosure" />
+              <label class="tab-label" for="chck_legal_disclosure">Tiết lộ pháp lý</label>
+              <div class="paragraph">
+                Chúng tôi sẽ tiết lộ bất kỳ thông tin nào chúng tôi thu thập, sử dụng hoặc nhận được nếu pháp luật yêu cầu hoặc cho phép, chẳng hạn như để tuân thủ khi hầu tòa hoặc quy trình pháp lý tương tự và khi chúng tôi tin rằng việc tiết lộ là cần thiết để bảo vệ quyền lợi của chúng tôi, bảo vệ sự an toàn của bạn hoặc sự an toàn của những người khác, điều tra gian lận hoặc đáp ứng yêu cầu của chính phủ.
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; Copyright 2020-<span id="year"></span> <a href="http://cuutruyen.net/">Cứu Truyện</a>. Đã đăng ký Bản quyền.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById("year").innerHTML = new Date().getFullYear();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const navButtons = document.querySelectorAll('.content-navigation .nav-button');
+      const contentSections = document.querySelectorAll('.content-area .content-section');
+
+      // Set initial active state based on HTML classes
+      let activeButton = document.querySelector('.content-navigation .nav-button.active');
+      let activeSection = document.querySelector('.content-area .content-section.active');
+
+      navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from previously active button and section
+          if (activeButton) {
+            activeButton.classList.remove('active');
+          }
+          if (activeSection) {
+            activeSection.classList.remove('active');
+          }
+
+          // Add active class to the clicked button
+          button.classList.add('active');
+          activeButton = button;
+
+          // Show the corresponding content section
+          const targetId = button.getAttribute('data-target');
+          const newActiveSection = document.getElementById(targetId);
+          if (newActiveSection) {
+            newActiveSection.classList.add('active');
+            activeSection = newActiveSection;
+          }
+        });
+      });
+
+      // Ensure only one section is active on load (in case of multiple .active in HTML)
+      let firstActiveFound = false;
+      contentSections.forEach(section => {
+          if (section.classList.contains('active')) {
+              if (firstActiveFound) {
+                  section.classList.remove('active');
+              } else {
+                  firstActiveFound = true;
+              }
+          }
+      });
+       // Fallback: if no section is active, activate the first one
+      if (!activeSection && contentSections.length > 0) {
+        contentSections[0].classList.add('active');
+        if (navButtons.length > 0) {
+            navButtons.forEach(btn => btn.classList.remove('active')); // Clear all
+            // Try to find button for the first section
+            const firstSectionId = contentSections[0].id;
+            const firstButton = document.querySelector(`.nav-button[data-target="${firstSectionId}"]`);
+            if (firstButton) {
+                firstButton.classList.add('active');
+                activeButton = firstButton;
+            }
+        }
+        activeSection = contentSections[0];
+      }
+    });
+  </script>
+</body>
+</html>

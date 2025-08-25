@@ -1,0 +1,26 @@
+stages:
+  - build
+
+build:
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  variables:
+    DOCKER_HOST: tcp://docker:2376
+    DOCKER_TLS_CERTDIR: "/certs"
+  stage: build
+  only:
+    - master
+  before_script:
+    - echo "$REGISTRY_PASSWORD" | docker login registry.gitlab.com --username tranxuanthang --password-stdin
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      --tag $CI_REGISTRY_IMAGE:latest
+      --file Dockerfile
+      .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:latest

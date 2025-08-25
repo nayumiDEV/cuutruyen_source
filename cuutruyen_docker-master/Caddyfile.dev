@@ -1,0 +1,14 @@
+cuutruyen.localhost, 192.168.1.111 {
+    handle /api* {
+        reverse_proxy api:3000
+    }
+
+    handle /uploads* {
+        root * /services/cuutruyen/public
+        file_server browse
+    }
+
+    handle * {
+        reverse_proxy app:8080
+    }
+}

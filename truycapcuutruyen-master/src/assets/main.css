@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-900 text-gray-100;
+}
+
+.collapsible {
+  /* @apply border-y border-gray-500; */
+}
+
+.collapsible-title {
+  @apply block w-full px-4 py-2 font-bold bg-gray-800 hover:bg-gray-700 transition border rounded my-2 mb-4;
+}

@@ -1,0 +1,26 @@
+cuutruyen.net {
+    @app_matcher {
+        path *
+        header Cf-Ipcountry VN
+    }
+
+    handle /api* {
+        encode zstd gzip
+        reverse_proxy api:3000
+    }
+
+    handle /uploads* {
+        header Cache-Control max-age=31536000
+        root * /services/cuutruyen/public
+        file_server
+    }
+
+    handle * {
+        encode zstd gzip
+        reverse_proxy app:3000
+    }
+}
+
+www.cuutruyen.net {
+    redir https://cuutruyen.net{uri} permanent
+}

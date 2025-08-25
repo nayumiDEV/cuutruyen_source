@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-gray-900 text-gray-200;
+}
+
+.button {
+  @apply text-xs font-bold uppercase text-gray-400 bg-gray-800 rounded flex items-center gap-1 hover:brightness-125 active:brightness-90 transition duration-300;
+}
+
+.button:disabled {
+  @apply opacity-50 cursor-not-allowed hover:brightness-100 active:brightness-100;
+}
+
+.button-primary {
+  @apply text-white bg-blue-800;
+}
+
+.link {
+  @apply text-xs text-green-600 hover:text-green-500 transition duration-300;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-fade-enter-active,
+.pop-fade-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.pop-fade-enter-from,
+.pop-fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}

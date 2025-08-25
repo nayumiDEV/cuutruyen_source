@@ -1,0 +1,5 @@
+LOAD DATABASE
+    FROM mysql://root:421998@localhost:3306/manga4u_development
+    INTO postgresql://thang:421998@localhost:5432/cuutruyen_development
+WITH data only, truncate
+ALTER SCHEMA 'manga4u_development' RENAME TO 'public';

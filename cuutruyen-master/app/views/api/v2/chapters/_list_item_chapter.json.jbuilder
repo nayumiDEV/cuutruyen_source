@@ -1,0 +1,9 @@
+json.id chapter.id
+json.order chapter.order
+json.number chapter.number
+json.name chapter.name
+json.views_count chapter.views_count
+json.comments_count chapter.comments_count
+json.status chapter.status
+json.created_at chapter.created_at
+json.updated_at chapter.updated_at

@@ -1,0 +1,9 @@
+public/uploads
+
+logs/
+tmp/
+!/log/.keep
+!/tmp/.keep
+
+.git
+.gitignore

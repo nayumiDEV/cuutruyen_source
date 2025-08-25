@@ -1,0 +1,430 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  height: -webkit-fill-available;
+}
+
+body {
+  width: 100%;
+}
+
+.truncate-multi {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@variants hover {
+  .fine-transition {
+    @apply transition duration-200 ease-in-out;
+  }
+}
+
+@responsive {
+  .max-w-0 {
+    max-width: 0;
+  }
+
+  .w-download {
+    width: 150px;
+  }
+
+  .min-h-mm {
+    min-height: 8.75rem;
+  }
+
+  .min-h-64 {
+    min-height: 16rem;
+  }
+
+  .ml-fs {
+    margin-left: 20rem;
+  }
+
+  .mt-fs {
+    margin-top: 9.05rem;
+  }
+}
+
+@variants hover {
+  .fine-shadow {
+    box-shadow: 0 3px 6px hsla(0, 0%, 0%, .07), 0 10px 20px hsla(0, 0%, 0%, .05);
+  }
+
+  .fine-shadow-spread {
+    box-shadow: 0 0px 5px hsla(0, 0%, 0%, 0.17);
+  }
+
+  .fine-shadow-lg {
+    box-shadow: 0 3px 6px hsla(0, 0%, 0%, .2), 0 10px 20px hsla(0, 0%, 0%, .08);
+  }
+
+  .fine-shadow-bold {
+    box-shadow: 0 0px 6px hsla(0, 0%, 0%, .2), 0 4px 6px hsla(0, 0%, 0%, .3);
+  }
+}
+
+/***/
+/* vue-notification
+ */
+.m4u-notification {
+  @apply shadow-lg rounded-lg text-white bg-blue-700 mb-2 mr-2 p-2 w-full;
+}
+
+@screen md {
+  .m4u-notification {
+    @apply mb-4 mr-4;
+    width: 18rem;
+  }
+}
+
+.m4u-notification.info {
+  @apply bg-blue-700;
+}
+
+.m4u-notification.warn {
+  @apply bg-yellow-700;
+}
+
+.m4u-notification.error {
+  @apply bg-red-700;
+}
+
+.m4u-notification.success {
+  @apply bg-green-700;
+}
+
+/**/
+/* common component
+ */
+.cv-auto {
+  content-visibility: auto;
+}
+
+.common-container {
+  @apply mx-auto;
+}
+
+@screen sm {
+  .common-container {
+    @apply max-w-screen-sm;
+  }
+}
+
+@screen md {
+  .common-container {
+    @apply max-w-screen-md;
+  }
+}
+
+@screen lg {
+  .common-container {
+    @apply max-w-screen-lg;
+  }
+}
+
+@screen xl {
+  .common-container {
+    @apply max-w-screen-xl;
+  }
+}
+
+.button {
+  @apply rounded-lg fine-transition font-bold text-sm uppercase whitespace-nowrap text-center;
+}
+
+.button-mini {
+  @apply rounded text-xs;
+}
+
+.button-circle {
+  @apply rounded-full;
+}
+
+.button-circle:focus {
+  @apply outline-none ring;
+}
+
+.button-bare:focus {
+  @apply outline-none ring;
+}
+
+.button-primary {
+  @apply bg-blue-600 text-blue-100 cursor-pointer hover:bg-blue-800;
+}
+
+.button-subtle-primary {
+  @apply bg-gray-100 focus:ring text-gray-500 hover:bg-gray-700 hover:text-gray-100;
+}
+
+.button-normal {
+  @apply text-blue-500 bg-white hover:bg-blue-100 box-border border border-blue-200 hover:border-blue-500;
+}
+
+.button-normal2 {
+  @apply bg-gray-300 hover:bg-gray-800 focus:ring text-gray-800 hover:text-gray-200;
+}
+
+.button-boring {
+  @apply bg-gray-100 focus:ring text-gray-500;
+}
+
+.button-warning {
+  @apply text-yellow-500 bg-white border border-yellow-200 cursor-pointer hover:bg-yellow-100 hover:border-yellow-500;
+}
+
+.button-danger {
+  @apply text-red-500 bg-white border border-red-200 cursor-pointer hover:bg-red-100 hover:border-red-500;
+}
+
+.button-danger-primary {
+  @apply bg-red-600 text-red-100 cursor-pointer hover:bg-red-800;
+}
+
+.button-disabled, .button:disabled {
+  @apply bg-gray-500 text-gray-600 cursor-default;
+  pointer-events: none;
+}
+
+.button:focus {
+  @apply outline-none ring;
+}
+
+.button-transparent-dark {
+  @apply bg-white bg-opacity-20 text-white text-opacity-50;
+}
+
+.button-transparent-dark:hover {
+  @apply bg-white bg-opacity-40 text-white text-opacity-80;
+}
+
+.button-transparent-light {
+  @apply bg-black bg-opacity-10 text-black text-opacity-70;
+}
+
+.button-transparent-light:hover {
+  @apply bg-black bg-opacity-20 text-black text-opacity-90;
+}
+
+.button-active {
+  @apply bg-blue-700 text-white;
+}
+
+.button-active:hover {
+  @apply bg-blue-800;
+}
+
+.table td, .table th {
+  @apply p-3.5;
+}
+
+.textarea {
+  @apply w-full h-24 rounded-lg px-4 py-2 fine-transition bg-white;
+}
+
+.textarea2 {
+  @apply w-full h-24 rounded-lg px-4 py-2 fine-transition bg-gray-100;
+}
+
+.textarea-dark {
+  @apply w-full h-24 rounded-lg px-4 py-2 fine-transition bg-gray-700;
+}
+
+.textarea-dark::placeholder {
+  @apply text-gray-500;
+}
+
+.textarea::placeholder, .textarea2::placeholder {
+  @apply text-gray-400;
+}
+
+.textarea:focus, .textarea-dark:focus, .textarea2:focus {
+  @apply outline-none ring;
+}
+
+.input {
+  @apply h-10 w-full rounded-lg px-4 py-2 fine-transition bg-white placeholder-gray-400 outline-none focus:ring;
+}
+
+.input2 {
+  @apply h-10 w-full rounded-lg px-4 py-2 fine-transition bg-gray-100 placeholder-gray-400 outline-none focus:ring;
+}
+
+.input-mini {
+  @apply h-7 rounded px-2 py-0.5 text-sm;
+}
+
+.input-dark {
+  @apply h-10 w-full rounded-lg px-4 py-2 fine-transition bg-gray-700 placeholder-gray-500 outline-none focus:ring;
+}
+
+.input-bare {
+  @apply h-10 w-full px-4 py-2 fine-transition bg-white placeholder-gray-400;
+}
+
+.label {
+  @apply block text-xs uppercase tracking-wide text-gray-700 font-semibold;
+}
+
+.upload-zone {
+  @apply cursor-pointer rounded-lg border-dashed border-2 bg-gray-400 border-gray-500 bg-opacity-50 flex flex-col items-center justify-center hover:bg-opacity-70;
+}
+
+.validate {
+  @apply text-yellow-700 text-sm;
+}
+
+.title {
+  @apply text-xl font-head font-bold text-gray-800 my-8;
+}
+
+@screen lg {
+  .title {
+    @apply text-2xl my-12;
+  }
+}
+
+.glassy-dark {
+  @apply bg-gray-900 bg-opacity-90;
+}
+
+@supports ( backdrop-filter: blur(20px) ) {
+  .glassy-dark {
+    @apply bg-gray-900 bg-opacity-100;
+    backdrop-filter: saturate(180%) blur(10px);
+  }
+}
+
+/***/
+/* Animating things
+ */
+.spin {
+  animation:spin 4s linear infinite;
+}
+
+@keyframes spin { 100% { transform:rotate(360deg); } }
+
+.fade-enter-active,
+.fade-leave-active {
+  transition-duration: 0.2s;
+  transition-property: opacity;
+  transition-timing-function: ease;
+}
+
+.fade-enter,
+.fade-leave-active {
+  opacity: 0
+}
+
+.snap-start {
+  scroll-snap-align: start;
+}
+
+@responsive {
+  .snap-stop-normal {
+    scroll-snap-stop: normal;
+  }
+
+  .snap-stop-always {
+    scroll-snap-stop: always;
+  }
+}
+
+.scroll-contain {
+  overscroll-behavior: contain;
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+ /* Hide scrollbar for Chrome, Safari and Opera */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.snap-center {
+  scroll-snap-align: center;
+}
+
+.form-divider {
+  @apply border border-gray-600 border-opacity-10 mb-8;
+}
+
+.form-section {
+  @apply grid grid-cols-[2fr_5fr] gap-4;
+}
+
+.prose li > p {
+  @apply m-0;
+}
+
+.prose li {
+  @apply mt-0 mb-1;
+}
+
+img.ProseMirror-selectednode {
+    @apply ring ring-blue-500;
+}
+
+.prose img {
+    @apply max-w-full max-h-[75vh] mx-auto;
+}
+
+/*Coc Coc*/
+.text-ads-top{
+  margin-top: 1rem;
+}
+.text-ads-bot{
+  margin-bottom: -2rem;
+  margin-top: 2rem;
+}
+.title2{
+  font-weight: bold;
+  color: #fff600;
+}
+.title2:hover{
+  color: #ffc302;
+}
+.canhbao{
+  font-weight: bold;
+  color: #fff600;
+  margin-top: 10px;
+}
+@media only screen and (min-width: 768px) {
+  .title2{
+    font-size: 16px;
+  }
+}
+.sualoi:hover{
+  color: #ffc302;
+}
+
+.form-section-description {
+  @apply mb-12;
+}
+
+.link {
+  @apply text-blue-600 hover:text-blue-500 active:text-blue-700 transition font-bold text-sm;
+}
+
+.avatar {
+  @apply flex-none rounded-full overflow-hidden flex flex-none justify-center items-center bg-blue-200 text-blue-700 font-bold uppercase shadow-inner;
+}
+
+.avatar-base {
+  @apply w-12 h-12 text-xs;
+}
+
+.avatar-lg {
+  @apply w-24 h-24 text-4xl;
+}

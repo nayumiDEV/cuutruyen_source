@@ -1,0 +1,9 @@
+json.id chapter.id
+json.number chapter.number
+json.order chapter.order
+json.name chapter.name
+json.status chapter.status
+json.progress chapter.progress
+json.pages_count chapter.pages_count
+json.created_at chapter.created_at
+json.edited_at chapter.edited_at
